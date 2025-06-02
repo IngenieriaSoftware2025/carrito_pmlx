@@ -1,10 +1,9 @@
 <div class="row justify-content-center p-3">
     <div class="col-lg-10">
-        <div class="card custom-card shadow-lg" style="border-radius: 10px; border: 1px solid #007bff;">
+        <div class="card custom-card shadow-lg" style="border-radius: 10px; border: 1px solidrgb(54, 0, 61);">
             <div class="card-body p-3">
                 <div class="row mb-3">
-                    <h5 class="text-center mb-2">¡Bienvenido a la Aplicación para el registro, modificación y eliminación de usuario!</h5>
-                    <h4 class="text-center mb-2 text-primary">MANIPULACION DE USUARIOS</h4>
+                    <h4 class="text-center mb-2 text-success">INGRESAR USUARIOS</h4>
                 </div>
 
                 <div class="row justify-content-center p-5 shadow-lg">
@@ -15,11 +14,11 @@
                         <div class="row mb-3 justify-content-center">
                             <div class="col-lg-6">
                                 <label for="usuario_nombres" class="form-label">INGRESE SUS NOMRES</label>
-                                <input type="text" class="form-control" id="usuario_nombres" name="usuario_nombres" placeholder="ingrese aca sus nombres">
+                                <input type="text" class="form-control" id="usuario_nombres" name="usuario_nombres" placeholder="Paola Mercedes">
                             </div>
                             <div class="col-lg-6">
                                 <label for="usuario_apellidos" class="form-label">INGRESE SUS APELLIDOS</label>
-                                <input type="text" class="form-control" id="usuario_apellidos" name="usuario_apellidos" placeholder="Ingrese aca sus apellidos">
+                                <input type="text" class="form-control" id="usuario_apellidos" name="usuario_apellidos" placeholder="Lopez Xitumul">
                             </div>
                         </div>
 
@@ -30,7 +29,7 @@
                             </div>
                             <div class="col-lg-6">
                                 <label for="usuario_telefono" class="form-label">INGRESE SU TELEFONO</label>
-                                <input type="number" class="form-control" id="usuario_telefono" name="usuario_telefono" placeholder="Ingrese aca su numero de telefono sin el +502">
+                                <input type="number" class="form-control" id="usuario_telefono" name="usuario_telefono" placeholder="5744-4158">
                             </div>
                         </div>
 
@@ -39,12 +38,12 @@
                         <div class="row mb-3 justify-content-center mb-3">
                             <div class="col-lg-6">
                                 <label for="usuario_correo" class="form-label">INGRESE SU CORREO ELECTRONICO</label>
-                                <input type="email" class="form-control" id="usuario_correo" name="usuario_correo" placeholder="Ingrese aca su correo ejemplo@ejemplo.com">
+                                <input type="email" class="form-control" id="usuario_correo" name="usuario_correo" placeholder="ejemplo@gmail.com">
                             </div>
                             <div class="col-lg-6">
-                                <label for="usuario_estado" class="form-label">ESCOJA EL ESTADO DEL USUARIO</label>
+                                <label for="usuario_estado" class="form-label">ESTADO DEL USUARIO</label>
                                 <select name="usuario_estado" class="form-select" id="usuario_estado">
-                                    <option value="" class="text-center"> -- SELECCION EL ESTADO -- </option>
+                                    <option value="" class="text-center"> -- ELECCION EL ESTADO -- </option>
                                     <option value="P">PRESENTE</option>
                                     <option value="F">FALTANDO</option>
                                     <option value="C">COMISION</option>
@@ -55,8 +54,8 @@
 
                         <div class="row mb-3 ">
                             <div class="col-lg-6">
-                                <label for="usuario_fecha" class="form-label">INGRESE LA FECHA</label>
-                                <input type="datetime-local" class="form-control" id="usuario_fecha" name="usuario_fecha" placeholder="Ingrese aca su correo ejemplo@ejemplo.com">
+                                <label for="usuario_fecha" class="form-label">FECHA</label>
+                                <input type="datetime-local" class="form-control" id="usuario_fecha" name="usuario_fecha" placeholder="ejemplo@gmail.com">
                             </div>
                         </div>
 
@@ -88,10 +87,10 @@
 
 <div class="row justify-content-center p-3">
     <div class="col-lg-10">
-        <div class="card custom-card shadow-lg" style="border-radius: 10px; border: 1px solid #007bff;">
+        <div class="card custom-card shadow-lg" style="border-radius: 10px; border: 1px solidrgba(81, 5, 117, 0.69);">
             <div class="card-body p-3">
-                <h3 class="text-center">USUARIOS REGISTRADOS EN LA BASE DE DATOS</h3>
-
+                <h3 class="text-center text-success">USUARIOS REGISTRADOS</h3>
+                
                 <div class="table-responsive p-2">
                     <table class="table table-striped table-hover table-bordered w-100 table-sm" id="TableUsuarios">
                     </table>

@@ -17,7 +17,6 @@ const ValidarTelefono = () => {
 
     const CantidadDigitos = InputUsuarioTelefono.value
 
-
     if (CantidadDigitos.length < 1) {
 
         InputUsuarioTelefono.classList.remove('is-valid', 'is-invalid');
@@ -99,6 +98,7 @@ const GuardarUsuario = async (event) => {
             showConfirmButton: true,
         });
         BtnGuardar.disabled = false;
+        return;
     }
 
     const body = new FormData(FormUsuarios);
@@ -133,7 +133,7 @@ const GuardarUsuario = async (event) => {
 
             await Swal.fire({
                 position: "center",
-                icon: "info",
+                icon: "error",
                 title: "Error",
                 text: mensaje,
                 showConfirmButton: true,
@@ -143,7 +143,14 @@ const GuardarUsuario = async (event) => {
 
 
     } catch (error) {
-        console.log(error)
+        console.log(error);
+        await Swal.fire({
+            position: "center",
+            icon: "error",
+            title: "Error de conexión",
+            text: "No se pudo conectar con el servidor",
+            showConfirmButton: true,
+        });
     }
     BtnGuardar.disabled = false;
 
@@ -164,14 +171,9 @@ const BuscarUsuarios = async () => {
 
         if (codigo == 1) {
 
-            await Swal.fire({
-                position: "center",
-                icon: "success",
-                title: "Exito",
-                text: mensaje,
-                showConfirmButton: true,
-            });
-
+            // CORRECCIÓN: Eliminar la alerta de éxito para buscar usuarios
+            // No es necesario mostrar una alerta cada vez que se cargan los datos
+            
             datatable.clear().draw();
             datatable.rows.add(data).draw();
 
@@ -179,7 +181,7 @@ const BuscarUsuarios = async () => {
 
             await Swal.fire({
                 position: "center",
-                icon: "info",
+                icon: "error",
                 title: "Error",
                 text: mensaje,
                 showConfirmButton: true,
@@ -188,7 +190,14 @@ const BuscarUsuarios = async () => {
 
 
     } catch (error) {
-        console.log(error)
+        console.log(error);
+        await Swal.fire({
+            position: "center",
+            icon: "error",
+            title: "Error de conexión",
+            text: "No se pudo cargar los usuarios",
+            showConfirmButton: true,
+        });
     }
 }
 
@@ -253,7 +262,7 @@ const datatable = new DataTable('#TableUsuarios', {
                          data-telefono="${row.usuario_telefono}"  
                          data-correo="${row.usuario_correo}"  
                          data-estado="${row.usuario_estado}"  
-                         data-fecha="${row.usuario_fecha}"  
+                         data-fecha="${row.usuario_fecha}">
                          <i class='bi bi-pencil-square me-1'></i> Modificar
                      </button>
                      <button class='btn btn-danger eliminar mx-1' 
@@ -294,6 +303,12 @@ const limpiarTodo = () => {
     FormUsuarios.reset();
     BtnGuardar.classList.remove('d-none');
     BtnModificar.classList.add('d-none');
+    
+    // Limpiar clases de validación
+    const inputs = FormUsuarios.querySelectorAll('.form-control');
+    inputs.forEach(input => {
+        input.classList.remove('is-valid', 'is-invalid');
+    });
 }
 
 
@@ -303,7 +318,8 @@ const ModificarUsuario = async (event) => {
     event.preventDefault();
     BtnModificar.disabled = true;
 
-    if (!validarFormulario(FormUsuarios, [''])) {
+    // CORRECCIÓN: Validar correctamente el formulario
+    if (!validarFormulario(FormUsuarios, [])) {
         Swal.fire({
             position: "center",
             icon: "info",
@@ -311,7 +327,8 @@ const ModificarUsuario = async (event) => {
             text: "Debe de validar todos los campos",
             showConfirmButton: true,
         });
-        BtnGuardar.disabled = false;
+        BtnModificar.disabled = false;
+        return;
     }
 
     const body = new FormData(FormUsuarios);
@@ -326,6 +343,7 @@ const ModificarUsuario = async (event) => {
 
         const respuesta = await fetch(url, config);
         const datos = await respuesta.json();
+        console.log(datos); // Para debug
         const { codigo, mensaje } = datos
 
         if (codigo == 1) {
@@ -345,7 +363,7 @@ const ModificarUsuario = async (event) => {
 
             await Swal.fire({
                 position: "center",
-                icon: "info",
+                icon: "error",
                 title: "Error",
                 text: mensaje,
                 showConfirmButton: true,
@@ -355,7 +373,14 @@ const ModificarUsuario = async (event) => {
 
 
     } catch (error) {
-        console.log(error)
+        console.log(error);
+        await Swal.fire({
+            position: "center",
+            icon: "error",
+            title: "Error de conexión",
+            text: "No se pudo conectar con el servidor",
+            showConfirmButton: true,
+        });
     }
     BtnModificar.disabled = false;
 
@@ -368,19 +393,20 @@ const EliminarUsuarios = async (e) => {
 
     const AlertaConfirmarEliminar = await Swal.fire({
         position: "center",
-        icon: "info",
+        icon: "question",
         title: "¿Desea ejecutar esta acción?",
         text: 'Esta completamente seguro que desea eliminar este registro',
         showConfirmButton: true,
         confirmButtonText: 'Si, Eliminar',
-        confirmButtonColor: 'red',
+        confirmButtonColor: '#d33',
         cancelButtonText: 'No, Cancelar',
         showCancelButton: true
     });
 
     if (AlertaConfirmarEliminar.isConfirmed) {
 
-        const url = `/carrito_pmlx/usuarios/eliminar?id=${idUsuario}`;
+        // CORRECCIÓN: Cambiar la URL para que coincida con el método del controlador
+        const url = `/carrito_pmlx/usuarios/eliminarAPI?id=${idUsuario}`;
         const config = {
             method: 'GET'
         }
@@ -389,6 +415,7 @@ const EliminarUsuarios = async (e) => {
 
             const consulta = await fetch(url, config);
             const respuesta = await consulta.json();
+            console.log(respuesta); // Para debug
             const { codigo, mensaje } = respuesta;
 
             if (codigo == 1) {
@@ -413,7 +440,14 @@ const EliminarUsuarios = async (e) => {
             }
 
         } catch (error) {
-            console.log(error)
+            console.log(error);
+            await Swal.fire({
+                position: "center",
+                icon: "error",
+                title: "Error de conexión",
+                text: "No se pudo eliminar el usuario",
+                showConfirmButton: true,
+            });
         }
 
     }
@@ -422,6 +456,7 @@ const EliminarUsuarios = async (e) => {
 
 
 
+// Inicialización y eventos
 BuscarUsuarios();
 datatable.on('click', '.eliminar', EliminarUsuarios);
 datatable.on('click', '.modificar', llenarFormulario);

@@ -256,38 +256,61 @@ class UsuarioController extends ActiveRecord
         }
     }
 
-    public static function EliminarAPI()
-    {
+   public static function eliminarAPI()
+{
+    try {
+        $id = filter_var($_GET['id'], FILTER_SANITIZE_NUMBER_INT);
 
-        try {
+        // Verificar que el ID sea válido
+        if (!$id || $id <= 0) {
+            http_response_code(400);
+            echo json_encode([
+                'codigo' => 0,
+                'mensaje' => 'ID de usuario inválido'
+            ]);
+            return;
+        }
 
-            $id = filter_var($_GET['id'], FILTER_SANITIZE_NUMBER_INT);
+        // Buscar el usuario
+        $data = Usuarios::find($id);
+        
+        if (!$data) {
+            http_response_code(404);
+            echo json_encode([
+                'codigo' => 0,
+                'mensaje' => 'Usuario no encontrado'
+            ]);
+            return;
+        }
 
-            // $data = Usuarios::find($id);
-            // $data->sincronizar([
-            // 'usuario_situacion' => 0,
-            // ]);
-            // $data->actualizar();
+        // ELIMINACIÓN LÓGICA: Cambiar situación a 0 en lugar de eliminar físicamente
+        $data->sincronizar([
+            'usuario_situacion' => 0
+        ]);
+        
+        $resultado = $data->actualizar();
 
-            // $data = Usuarios::find($id);
-            // $data->eliminar();
-
-
-            $ejecutar = Usuarios::EliminarUsuarios($id);
-
-
+        if ($resultado) {
             http_response_code(200);
             echo json_encode([
                 'codigo' => 1,
                 'mensaje' => 'El registro ha sido eliminado correctamente'
             ]);
-        } catch (Exception $e) {
-            http_response_code(400);
+        } else {
+            http_response_code(500);
             echo json_encode([
                 'codigo' => 0,
-                'mensaje' => 'Error al Eliminar',
-                'detalle' => $e->getMessage(),
+                'mensaje' => 'Error al actualizar el registro'
             ]);
         }
+
+    } catch (Exception $e) {
+        http_response_code(500);
+        echo json_encode([
+            'codigo' => 0,
+            'mensaje' => 'Error al eliminar usuario',
+            'detalle' => $e->getMessage(),
+        ]);
     }
+}
 }

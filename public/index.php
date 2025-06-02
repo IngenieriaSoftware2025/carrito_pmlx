@@ -39,10 +39,6 @@ $router->get('/facturas/generar', [FacturaController::class, 'generarPDF']);
 $router->get('/facturas/previsualizar', [FacturaController::class, 'previsualizarFactura']);
 $router->get('/facturas/descargar', [FacturaController::class, 'descargarFactura']);
 
-// // Rutas para facturas
-// $router->get('/facturas/generar', [FacturaController::class, 'generarPDF']);
-// $router->get('/facturas/preview', [FacturaController::class, 'previsualizarFactura']);
-// $router->get('/facturas/descargar', [FacturaController::class, 'descargarFactura']);
 
 
 $router->comprobarRutas();
