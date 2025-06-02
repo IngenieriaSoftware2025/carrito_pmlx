@@ -3,8 +3,7 @@
         <div class="card custom-card shadow-lg" style="border-radius: 10px; border: 1px solid #007bff;">
             <div class="card-body p-3">
                 <div class="row mb-3">
-                    <h5 class="text-center mb-2">¡Sistema de Gestión de Productos!</h5>
-                    <h4 class="text-center mb-2 text-primary">ADMINISTRACIÓN DE PRODUCTOS</h4>
+                      <h3 class="text-center text-success">REGISTRAR PRODUCTOS</h3>
                 </div>
 
                 <div class="row justify-content-center p-5 shadow-lg">
@@ -15,7 +14,7 @@
                         <div class="row mb-3 justify-content-center">
                             <div class="col-lg-8">
                                 <label for="pro_nombre" class="form-label">NOMBRE DEL PRODUCTO</label>
-                                <input type="text" class="form-control" id="pro_nombre" name="pro_nombre" placeholder="Ingrese el nombre del producto">
+                                <input type="text" class="form-control" id="pro_nombre" name="pro_nombre" placeholder="Producto">
                             </div>
                         </div>
 
@@ -25,7 +24,7 @@
                                 <input type="number" class="form-control" id="pro_precio" name="pro_precio" placeholder="0" min="1">
                             </div>
                             <div class="col-lg-4">
-                                <label for="pro_cantidad" class="form-label">CANTIDAD EN STOCK</label>
+                                <label for="pro_cantidad" class="form-label">CANTIDAD DISPONIBLE</label>
                                 <input type="number" class="form-control" id="pro_cantidad" name="pro_cantidad" placeholder="0" min="0">
                             </div>
                         </div>
@@ -60,7 +59,7 @@
     <div class="col-lg-10">
         <div class="card custom-card shadow-lg" style="border-radius: 10px; border: 1px solid #007bff;">
             <div class="card-body p-3">
-                <h3 class="text-center">PRODUCTOS REGISTRADOS EN LA BASE DE DATOS</h3>
+                <h3 class="text-center text-success">PRODUCTOS REGISTRADOS</h3>
 
                 <div class="table-responsive p-2">
                     <table class="table table-striped table-hover table-bordered w-100 table-sm" id="TableProductos">

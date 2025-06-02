@@ -6,26 +6,21 @@
     <script src="build/js/app.js"></script>
     <link rel="shortcut icon" href="<?= asset('images/cit.png') ?>" type="image/x-icon">
     <link rel="stylesheet" href="<?= asset('build/styles.css') ?>">
-    <title>Sistema de Ventas</title>
+    <title>Carrito</title>
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+<nav class="navbar navbar-expand-lg navbar-dark bg-success">
     <div class="container-fluid">
 
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggler" aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        
-        <a class="navbar-brand" href="/carrito_pmlx/">
-            <img src="<?= asset('./images/cit.png') ?>" width="35px'" alt="cit" >
-            Sistema de Ventas
-        </a>
-        
+                
         <div class="collapse navbar-collapse" id="navbarToggler">
             
             <ul class="navbar-nav me-auto mb-2 mb-lg-0" style="margin: 0;">
                 <li class="nav-item">
-                    <a class="nav-link" aria-current="page" href="/carrito_pmlx/ventas">
+                    <a class="nav-link" aria-current="page" href="/carrito_pmlx/">
                         <i class="bi bi-house-fill me-2"></i>Inicio
                     </a>
                 </li>
@@ -57,7 +52,7 @@
             
             <div class="dropdown me-3">
                 <a class="btn btn-outline-light dropdown-toggle" href="#" role="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="bi bi-person-circle me-1"></i> Usuario
+                   <i class="bi bi-arrow-through-heart"></i> Usuario
                 </a>
                 <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-labelledby="userDropdown">
                     <li>
@@ -74,11 +69,6 @@
                 </ul>
             </div>
             
-            <div class="col-lg-1 d-grid mb-lg-0 mb-2">
-                <a href="/menu/" class="btn btn-outline-light">
-                    <i class="bi bi-arrow-bar-left me-1"></i>MENÚ
-                </a>
-            </div>
         </div>
     </div>
 </nav>
@@ -95,7 +85,7 @@
     <div class="row justify-content-center text-center">
         <div class="col-12">
             <p style="font-size:xx-small; font-weight: bold;">
-                Sistema de Ventas - Comando de Informática y Tecnología, <?= date('Y') ?> &copy;
+                Carito de compras - Comando de Informática y Tecnología, <?= date('Y') ?> &copy;
             </p>
         </div>
     </div>
