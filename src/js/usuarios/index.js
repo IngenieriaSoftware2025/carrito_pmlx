@@ -277,17 +277,23 @@ const datatable = new DataTable('#TableUsuarios', {
 
 
 const llenarFormulario = (event) => {
+    const datos = event.currentTarget.dataset;
 
-    const datos = event.currentTarget.dataset
-
-    document.getElementById('usuario_id').value = datos.id
-    document.getElementById('usuario_nombres').value = datos.nombre
-    document.getElementById('usuario_apellidos').value = datos.apellidos
-    document.getElementById('usuario_nit').value = datos.nit
-    document.getElementById('usuario_telefono').value = datos.telefono
-    document.getElementById('usuario_correo').value = datos.correo
-    document.getElementById('usuario_estado').value = datos.estado
-    document.getElementById('usuario_fecha').value = datos.fecha
+    document.getElementById('usuario_id').value = datos.id;
+    document.getElementById('usuario_nombres').value = datos.nombre;
+    document.getElementById('usuario_apellidos').value = datos.apellidos;
+    document.getElementById('usuario_nit').value = datos.nit;
+    document.getElementById('usuario_telefono').value = datos.telefono;
+    document.getElementById('usuario_correo').value = datos.correo;
+    document.getElementById('usuario_estado').value = datos.estado;
+    
+    // CORRECCIÓN CRÍTICA: Formatear la fecha correctamente
+    let fechaFormateada = datos.fecha;
+    if (fechaFormateada) {
+        // Convertir "2025-06-02 11:50:00" a "2025-06-02T11:50"
+        fechaFormateada = fechaFormateada.replace(' ', 'T').substring(0, 16);
+    }
+    document.getElementById('usuario_fecha').value = fechaFormateada;
 
     BtnGuardar.classList.add('d-none');
     BtnModificar.classList.remove('d-none');
@@ -295,21 +301,87 @@ const llenarFormulario = (event) => {
     window.scrollTo({
         top: 0
     });
+};
 
-}
+const ModificarUsuario = async (event) => {
+    event.preventDefault();
+    BtnModificar.disabled = true;
 
-const limpiarTodo = () => {
+    console.log("=== INICIANDO MODIFICACIÓN ===");
 
-    FormUsuarios.reset();
-    BtnGuardar.classList.remove('d-none');
-    BtnModificar.classList.add('d-none');
-    
-    // Limpiar clases de validación
-    const inputs = FormUsuarios.querySelectorAll('.form-control');
-    inputs.forEach(input => {
-        input.classList.remove('is-valid', 'is-invalid');
-    });
-}
+    try {
+        // Verificar que todos los campos estén llenos
+        const formData = new FormData(FormUsuarios);
+        
+        // Debug: mostrar todos los datos
+        console.log("Datos a enviar:");
+        for (let [key, value] of formData.entries()) {
+            console.log(`${key}: "${value}"`);
+        }
+
+        // Verificar campos críticos
+        const id = formData.get('usuario_id');
+        const nombres = formData.get('usuario_nombres');
+        const apellidos = formData.get('usuario_apellidos');
+        const telefono = formData.get('usuario_telefono');
+        const nit = formData.get('usuario_nit');
+        const correo = formData.get('usuario_correo');
+        const estado = formData.get('usuario_estado');
+        const fecha = formData.get('usuario_fecha');
+
+        if (!id || !nombres || !apellidos || !telefono || !nit || !correo || !estado || !fecha) {
+            throw new Error('Todos los campos son requeridos');
+        }
+
+        const url = '/carrito_pmlx/usuarios/modificarAPI';
+        console.log("Enviando a:", url);
+
+        const respuesta = await fetch(url, {
+            method: 'POST',
+            body: formData
+        });
+
+        console.log("Status de respuesta:", respuesta.status);
+
+        const datos = await respuesta.json();
+        console.log("Respuesta del servidor:", datos);
+
+        const { codigo, mensaje } = datos;
+
+        if (codigo == 1) {
+            await Swal.fire({
+                position: "center",
+                icon: "success",
+                title: "Éxito",
+                text: mensaje,
+                showConfirmButton: true,
+            });
+
+            limpiarTodo();
+            BuscarUsuarios();
+        } else {
+            await Swal.fire({
+                position: "center",
+                icon: "error",
+                title: "Error",
+                text: mensaje,
+                showConfirmButton: true,
+            });
+        }
+
+    } catch (error) {
+        console.error("Error completo:", error);
+        await Swal.fire({
+            position: "center",
+            icon: "error",
+            title: "Error",
+            text: error.message || "No se pudo conectar con el servidor",
+            showConfirmButton: true,
+        });
+    }
+
+    BtnModificar.disabled = false;
+};
 
 
 

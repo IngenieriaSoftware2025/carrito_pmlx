@@ -17,6 +17,7 @@ $router->get('/usuario', [UsuarioController::class, 'renderizarPAgina']);
 $router->post('/usuarios/guardarAPI', [UsuarioController::class, 'guardarAPI']);
 $router->get('/usuarios/buscarAPI', [UsuarioController::class, 'buscarAPI']);
 $router->post('/usuarios/modificarAPI', [UsuarioController::class, 'modificarAPI']);
+$router->get('/usuarios/eliminarAPI', [UsuarioController::class, 'eliminarAPI']);
 
 //Rutas Productos
 $router->get('/productos', [ProductoController::class, 'renderizarPagina']);

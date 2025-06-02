@@ -13,7 +13,7 @@
 
                         <div class="row mb-3 justify-content-center">
                             <div class="col-lg-6">
-                                <label for="usuario_nombres" class="form-label">INGRESE SUS NOMRES</label>
+                                <label for="usuario_nombres" class="form-label">INGRESE SUS NOMBRES</label>
                                 <input type="text" class="form-control" id="usuario_nombres" name="usuario_nombres" placeholder="Paola Mercedes">
                             </div>
                             <div class="col-lg-6">
