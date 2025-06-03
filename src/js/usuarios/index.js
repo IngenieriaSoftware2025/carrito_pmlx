@@ -287,10 +287,11 @@ const llenarFormulario = (event) => {
     document.getElementById('usuario_correo').value = datos.correo;
     document.getElementById('usuario_estado').value = datos.estado;
     
-    // CORRECCIÓN CRÍTICA: Formatear la fecha correctamente
+    // CORRECCIÓN: Formatear la fecha correctamente para el input datetime-local
     let fechaFormateada = datos.fecha;
     if (fechaFormateada) {
-        // Convertir "2025-06-02 11:50:00" a "2025-06-02T11:50"
+        // Si la fecha viene en formato "2025-06-02 11:50:00"
+        // La convertimos a formato para datetime-local: "2025-06-02T11:50"
         fechaFormateada = fechaFormateada.replace(' ', 'T').substring(0, 16);
     }
     document.getElementById('usuario_fecha').value = fechaFormateada;
@@ -302,6 +303,21 @@ const llenarFormulario = (event) => {
         top: 0
     });
 };
+
+const limpiarTodo = () => {
+
+    FormUsuarios.reset();
+    BtnGuardar.classList.remove('d-none');
+    BtnModificar.classList.add('d-none');
+    
+    // Limpiar clases de validación
+    const inputs = FormUsuarios.querySelectorAll('.form-control');
+    inputs.forEach(input => {
+        input.classList.remove('is-valid', 'is-invalid');
+    });
+}
+
+
 
 const ModificarUsuario = async (event) => {
     event.preventDefault();
@@ -382,81 +398,6 @@ const ModificarUsuario = async (event) => {
 
     BtnModificar.disabled = false;
 };
-
-
-
-const ModificarUsuario = async (event) => {
-
-    event.preventDefault();
-    BtnModificar.disabled = true;
-
-    // CORRECCIÓN: Validar correctamente el formulario
-    if (!validarFormulario(FormUsuarios, [])) {
-        Swal.fire({
-            position: "center",
-            icon: "info",
-            title: "FORMULARIO INCOMPLETO",
-            text: "Debe de validar todos los campos",
-            showConfirmButton: true,
-        });
-        BtnModificar.disabled = false;
-        return;
-    }
-
-    const body = new FormData(FormUsuarios);
-
-    const url = '/carrito_pmlx/usuarios/modificarAPI';
-    const config = {
-        method: 'POST',
-        body
-    }
-
-    try {
-
-        const respuesta = await fetch(url, config);
-        const datos = await respuesta.json();
-        console.log(datos); // Para debug
-        const { codigo, mensaje } = datos
-
-        if (codigo == 1) {
-
-            await Swal.fire({
-                position: "center",
-                icon: "success",
-                title: "Exito",
-                text: mensaje,
-                showConfirmButton: true,
-            });
-
-            limpiarTodo();
-            BuscarUsuarios();
-
-        } else {
-
-            await Swal.fire({
-                position: "center",
-                icon: "error",
-                title: "Error",
-                text: mensaje,
-                showConfirmButton: true,
-            });
-
-        }
-
-
-    } catch (error) {
-        console.log(error);
-        await Swal.fire({
-            position: "center",
-            icon: "error",
-            title: "Error de conexión",
-            text: "No se pudo conectar con el servidor",
-            showConfirmButton: true,
-        });
-    }
-    BtnModificar.disabled = false;
-
-}
 
 
 const EliminarUsuarios = async (e) => {

@@ -152,183 +152,103 @@ class UsuarioController extends ActiveRecord
     }
 
 
-  public static function modificarAPI()
+    public static function modificarAPI()
 {
-    // Limpiar cualquier output buffer
-    if (ob_get_contents()) ob_clean();
-    
-    // Headers para JSON
-    header('Content-Type: application/json; charset=utf-8');
-    header('Access-Control-Allow-Origin: *');
-    header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
-    header('Access-Control-Allow-Headers: Content-Type');
+    getHeadersApi();
 
-    try {
-        // Verificar que es una petición POST
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            http_response_code(405);
-            echo json_encode([
-                'codigo' => 0,
-                'mensaje' => 'Método no permitido. Use POST.'
-            ]);
-            exit;
-        }
+    $id = $_POST['usuario_id'];
+    $_POST['usuario_apellidos'] = htmlspecialchars($_POST['usuario_apellidos']);
 
-        // Verificar que el ID esté presente
-        if (!isset($_POST['usuario_id']) || empty($_POST['usuario_id'])) {
-            http_response_code(400);
-            echo json_encode([
-                'codigo' => 0,
-                'mensaje' => 'ID de usuario requerido'
-            ]);
-            exit;
-        }
+    $cantidad_apellidos = strlen($_POST['usuario_apellidos']);
 
-        $id = filter_var($_POST['usuario_id'], FILTER_SANITIZE_NUMBER_INT);
-
-        // Verificar campos requeridos
-        $camposRequeridos = [
-            'usuario_nombres', 'usuario_apellidos', 'usuario_telefono', 
-            'usuario_nit', 'usuario_correo', 'usuario_estado', 'usuario_fecha'
-        ];
-        
-        foreach ($camposRequeridos as $campo) {
-            if (!isset($_POST[$campo]) || trim($_POST[$campo]) === '') {
-                http_response_code(400);
-                echo json_encode([
-                    'codigo' => 0,
-                    'mensaje' => "Campo requerido faltante: $campo"
-                ]);
-                exit;
-            }
-        }
-
-        // Limpiar y validar datos
-        $nombres = htmlspecialchars(trim($_POST['usuario_nombres']));
-        $apellidos = htmlspecialchars(trim($_POST['usuario_apellidos']));
-        
-        if (strlen($nombres) < 2) {
-            http_response_code(400);
-            echo json_encode([
-                'codigo' => 0,
-                'mensaje' => 'El nombre debe tener al menos 2 caracteres'
-            ]);
-            exit;
-        }
-
-        if (strlen($apellidos) < 2) {
-            http_response_code(400);
-            echo json_encode([
-                'codigo' => 0,
-                'mensaje' => 'El apellido debe tener al menos 2 caracteres'
-            ]);
-            exit;
-        }
-
-        // Validar teléfono
-        $telefono = filter_var($_POST['usuario_telefono'], FILTER_SANITIZE_NUMBER_INT);
-        if (!$telefono || strlen($telefono) != 8) {
-            http_response_code(400);
-            echo json_encode([
-                'codigo' => 0,
-                'mensaje' => 'El teléfono debe tener exactamente 8 dígitos'
-            ]);
-            exit;
-        }
-
-        // Validar email
-        $correo = filter_var(trim($_POST['usuario_correo']), FILTER_VALIDATE_EMAIL);
-        if (!$correo) {
-            http_response_code(400);
-            echo json_encode([
-                'codigo' => 0,
-                'mensaje' => 'El correo electrónico no es válido'
-            ]);
-            exit;
-        }
-
-        // Validar estado
-        $estado = htmlspecialchars(trim($_POST['usuario_estado']));
-        if (!in_array($estado, ['P', 'F', 'C'])) {
-            http_response_code(400);
-            echo json_encode([
-                'codigo' => 0,
-                'mensaje' => 'El estado debe ser P, F o C'
-            ]);
-            exit;
-        }
-
-        // Validar y formatear fecha
-        $fecha = $_POST['usuario_fecha'];
-        if (empty($fecha)) {
-            http_response_code(400);
-            echo json_encode([
-                'codigo' => 0,
-                'mensaje' => 'La fecha es requerida'
-            ]);
-            exit;
-        }
-
-        // Convertir fecha a formato de base de datos
-        $fechaFormateada = date('Y-m-d H:i:s', strtotime($fecha));
-        if (!$fechaFormateada) {
-            http_response_code(400);
-            echo json_encode([
-                'codigo' => 0,
-                'mensaje' => 'Formato de fecha inválido'
-            ]);
-            exit;
-        }
-
-        // Buscar el usuario
-        $usuario = Usuarios::find($id);
-        if (!$usuario) {
-            http_response_code(404);
-            echo json_encode([
-                'codigo' => 0,
-                'mensaje' => 'Usuario no encontrado'
-            ]);
-            exit;
-        }
-
-        // Actualizar datos
-        $usuario->sincronizar([
-            'usuario_nombres' => $nombres,
-            'usuario_apellidos' => $apellidos,
-            'usuario_nit' => filter_var($_POST['usuario_nit'], FILTER_SANITIZE_NUMBER_INT),
-            'usuario_telefono' => $telefono,
-            'usuario_correo' => $correo,
-            'usuario_estado' => $estado,
-            'usuario_fecha' => $fechaFormateada,
-            'usuario_situacion' => 1
+    if ($cantidad_apellidos < 2) {
+        http_response_code(400);
+        echo json_encode([
+            'codigo' => 0,
+            'mensaje' => 'La cantidad de digitos que debe de contener el apellido debe de ser mayor a dos'
         ]);
+        return;
+    }
 
-        $resultado = $usuario->actualizar();
+    $_POST['usuario_nombres'] = htmlspecialchars($_POST['usuario_nombres']);
+    $cantidad_nombres = strlen($_POST['usuario_nombres']);
 
-        if ($resultado) {
+    if ($cantidad_nombres < 2) {
+        http_response_code(400);
+        echo json_encode([
+            'codigo' => 0,
+            'mensaje' => 'La cantidad de digitos que debe de contener el nombre debe de ser mayor a dos' // ← CORREGIDO
+        ]);
+        return;
+    }
+
+    $_POST['usuario_telefono'] = filter_var($_POST['usuario_telefono'], FILTER_VALIDATE_INT);
+
+    if (strlen($_POST['usuario_telefono']) != 8) {
+        http_response_code(400);
+        echo json_encode([
+            'codigo' => 0,
+            'mensaje' => 'La cantidad de digitos de telefono debe de ser igual a 8' // ← CORREGIDO
+        ]);
+        return;
+    }
+
+    $_POST['usuario_nit'] = filter_var($_POST['usuario_nit'], FILTER_SANITIZE_NUMBER_INT);
+    $_POST['usuario_correo'] = filter_var($_POST['usuario_correo'], FILTER_SANITIZE_EMAIL);
+$_POST['usuario_fecha'] = date('Y-m-d H:i:s', strtotime($_POST['usuario_fecha']));
+
+    // CORREGIDO: Validación del correo
+    if (!filter_var($_POST['usuario_correo'], FILTER_VALIDATE_EMAIL)) {
+        http_response_code(400);
+        echo json_encode([
+            'codigo' => 0,
+            'mensaje' => 'El correo electronico ingresado es invalido' // ← CORREGIDO
+        ]);
+        return;
+    }
+
+    $_POST['usuario_estado'] = htmlspecialchars($_POST['usuario_estado']);
+    $estado = $_POST['usuario_estado'];
+
+    if ($estado == "P" || $estado == "F" || $estado == "C") {
+        try {
+            $data = Usuarios::find($id);
+            
+            // CORREGIDO: Agregar usuario_estado
+            $data->sincronizar([
+                'usuario_nombres' => $_POST['usuario_nombres'],
+                'usuario_apellidos' => $_POST['usuario_apellidos'],
+                'usuario_nit' => $_POST['usuario_nit'],
+                'usuario_telefono' => $_POST['usuario_telefono'],
+                'usuario_correo' => $_POST['usuario_correo'],
+                'usuario_fecha' => $_POST['usuario_fecha'],
+                'usuario_estado' => $_POST['usuario_estado'], // ← AGREGADO
+                'usuario_situacion' => 1
+            ]);
+            
+            $data->actualizar();
+
             http_response_code(200);
             echo json_encode([
                 'codigo' => 1,
-                'mensaje' => 'Usuario modificado exitosamente'
+                'mensaje' => 'La informacion del usuario ha sido modificada exitosamente'
             ]);
-        } else {
-            http_response_code(500);
+        } catch (Exception $e) {
+            http_response_code(400);
             echo json_encode([
                 'codigo' => 0,
-                'mensaje' => 'Error al actualizar el usuario'
+                'mensaje' => 'Error al guardar',
+                'detalle' => $e->getMessage(),
             ]);
         }
-
-    } catch (Exception $e) {
-        http_response_code(500);
+    } else {
+        http_response_code(400);
         echo json_encode([
             'codigo' => 0,
-            'mensaje' => 'Error interno del servidor',
-            'detalle' => $e->getMessage()
+            'mensaje' => 'Los destinos solo pueden ser "P, F, C"' // ← CORREGIDO
         ]);
+        return;
     }
-    
-    exit;
 }
 
    public static function eliminarAPI()
